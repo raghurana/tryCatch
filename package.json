@@ -1,6 +1,6 @@
 {
   "name": "try-catch-util",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A simple util to wrap sync/async functions and handle errors type-safely.",
   "keywords": [
     "try catch",
