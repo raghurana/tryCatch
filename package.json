@@ -29,13 +29,10 @@
   ],
   "scripts": {
     "dev": "tsx src/cli.ts",
-    "format": "biome format --write .",
-    "format:check": "biome format .",
-    "lint": "biome lint .",
     "check": "biome check .",
+    "fix": "biome check --write .",
     "test": "jest",
     "build": "tsc --build --noEmit && tsx esbuild.config.ts",
-    "prepublishOnly": "npm run build && npm test",
     "patch": "npm version patch -m \"chore(release): %s [skip ci]\""
   },
   "devDependencies": {
