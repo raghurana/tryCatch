@@ -35,7 +35,8 @@
     "check": "biome check .",
     "test": "jest",
     "build": "tsc --build --noEmit && tsx esbuild.config.ts",
-    "prepublishOnly": "npm run build && npm test"
+    "prepublishOnly": "npm run build && npm test",
+    "patch": "npm version patch -m \"chore(release): %s [skip ci]\""
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",

@@ -4,11 +4,9 @@ export type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
 
 /**
  * Executes a synchronous or asynchronous function and returns a typed result object.
- *
  * Successful executions resolve with `{ result }`, while thrown errors resolve with
  * `{ error }`. If a string is thrown, it is converted into an `Error` instance.
- *
- * @param input - Function to execute safely.
+ * @param input - Function to execute safely without messy try/catch blocks.
  * @returns A promise containing either the function result or the captured error.
  */
 export async function tryCatch<T, E extends Error = Error>(input: () => Promise<T> | T): Promise<Result<T, E>> {
