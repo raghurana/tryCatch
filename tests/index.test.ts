@@ -1,166 +1,157 @@
-import { tryCatch } from "../src";
-describe("tryCatch tests", () => {
-  describe("successful executions", () => {
-    test("should return result on resolved promise", async () => {
-      const result = await tryCatch(async () => "resolved value");
+import { tryCatch } from '../src';
 
-      expect(result).toEqual({ result: "resolved value" });
-      expect(result).not.toHaveProperty("error");
+describe('tryCatch tests', () => {
+  describe('successful executions', () => {
+    test('should return result on resolved promise', async () => {
+      const { result, error } = await tryCatch(async () => 'resolved value');
+
+      expect(result).toBe('resolved value');
+      expect(error).toBeUndefined();
     });
 
-    test("should return result for non-promise value", async () => {
-      const result = await tryCatch(() => 42);
+    test('should return result for non-promise value', async () => {
+      const { result, error } = await tryCatch(() => 42);
 
-      expect(result).toEqual({ result: 42 });
-      expect(result).not.toHaveProperty("error");
+      expect(result).toBe(42);
+      expect(error).toBeUndefined();
     });
 
     test.each([
-      ["undefined", undefined],
-      ["null", null],
-      ["false", false],
-      ["zero", 0],
-      ["empty string", ""],
-    ])("should return %s as a successful result", async (_label, value) => {
-      const result = await tryCatch(() => value);
+      ['undefined', undefined],
+      ['null', null],
+      ['false', false],
+      ['zero', 0],
+      ['empty string', ''],
+    ])('should return %s as a successful result', async (_label, value) => {
+      const { result, error } = await tryCatch(() => value);
 
-      expect(result).toEqual({ result: value });
-      expect(result).not.toHaveProperty("error");
+      expect(result).toBe(value);
+      expect(error).toBeUndefined();
     });
 
-    test("should preserve object result references", async () => {
-      const value = { id: "rule-1", enabled: true };
+    test('should preserve object result references', async () => {
+      const value = { id: 'rule-1', enabled: true };
+      const { result, error } = await tryCatch(() => value);
 
-      const result = await tryCatch(() => value);
-
-      expect(result).toEqual({ result: value });
-      expect(result.result).toBe(value);
+      expect(result).toBe(value);
+      expect(error).toBeUndefined();
     });
 
-    test("should return Error objects as successful results when they are returned", async () => {
-      const value = new Error("returned error");
+    test('should return Error objects as successful results when they are returned', async () => {
+      const value = new Error('returned error');
+      const { result, error } = await tryCatch(() => value);
 
-      const result = await tryCatch(() => value);
-
-      expect(result).toEqual({ result: value });
-      expect(result.result).toBe(value);
-      expect(result).not.toHaveProperty("error");
+      expect(result).toBe(value);
+      expect(error).toBeUndefined();
     });
 
-    test("should wait for async work before returning the result", async () => {
+    test('should wait for async work before returning the result', async () => {
       const calls: string[] = [];
-
-      const result = await tryCatch(async () => {
-        calls.push("started");
+      const { result, error } = await tryCatch(async () => {
+        calls.push('started');
         await Promise.resolve();
-        calls.push("finished");
+        calls.push('finished');
         return calls.length;
       });
 
-      expect(result).toEqual({ result: 2 });
-      expect(calls).toEqual(["started", "finished"]);
+      expect(result).toBe(2);
+      expect(error).toBeUndefined();
+      expect(calls).toEqual(['started', 'finished']);
     });
 
-    test("should call the input function exactly once", async () => {
-      const input = jest.fn(() => "value");
+    test('should call the input function exactly once', async () => {
+      const input = jest.fn(() => 'value');
+      const { result, error } = await tryCatch(input);
 
-      const result = await tryCatch(input);
-
-      expect(result).toEqual({ result: "value" });
+      expect(result).toBe('value');
+      expect(error).toBeUndefined();
       expect(input).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe("failed executions", () => {
-    test("should return error on rejected promise", async () => {
-      const expectedError = new Error("rejected promise");
+  describe('failed executions', () => {
+    test('should return error on rejected promise', async () => {
+      const expectedError = new Error('rejected promise');
+      const { result, error } = await tryCatch(() => Promise.reject(expectedError));
 
-      const result = await tryCatch(() => Promise.reject(expectedError));
-
-      expect(result).toEqual({ error: expectedError });
-      expect(result.error).toBe(expectedError);
-      expect(result).not.toHaveProperty("result");
+      expect(result).toBeUndefined();
+      expect(error).toBe(expectedError);
     });
 
-    test("should handle thrown error inside async function", async () => {
-      const expectedError = new TypeError("async failure");
-
-      const result = await tryCatch(async () => {
+    test('should handle thrown error inside async function', async () => {
+      const expectedError = new TypeError('async failure');
+      const { result, error } = await tryCatch(async () => {
         throw expectedError;
       });
 
-      expect(result).toEqual({ error: expectedError });
-      expect(result.error).toBe(expectedError);
-      expect(result).not.toHaveProperty("result");
+      expect(result).toBeUndefined();
+      expect(error).toBe(expectedError);
     });
 
-    test("should handle thrown error inside sync function", async () => {
-      const expectedError = new RangeError("sync failure");
-
-      const result = await tryCatch(() => {
+    test('should handle thrown error inside sync function', async () => {
+      const expectedError = new RangeError('sync failure');
+      const { result, error } = await tryCatch(() => {
         throw expectedError;
       });
 
-      expect(result).toEqual({ error: expectedError });
-      expect(result.error).toBe(expectedError);
-      expect(result).not.toHaveProperty("result");
+      expect(result).toBeUndefined();
+      expect(error).toBe(expectedError);
     });
 
-    test("should preserve custom Error subclasses", async () => {
-      const expectedError = new CustomError("custom failure");
-
-      const result = await tryCatch(() => {
+    test('should preserve custom Error subclasses', async () => {
+      const expectedError = new CustomError('custom failure');
+      const { result, error } = await tryCatch(() => {
         throw expectedError;
       });
 
-      expect(result).toEqual({ error: expectedError });
-      expect(result.error).toBeInstanceOf(CustomError);
-      expect(result.error).toBe(expectedError);
+      expect(result).toBeUndefined();
+      expect(error).toBeInstanceOf(CustomError);
+      expect(error).toBe(expectedError);
     });
 
-    test("should convert thrown string into Error instance", async () => {
-      const result = await tryCatch(() => {
-        throw "string error";
+    test('should convert thrown string into Error instance', async () => {
+      const { result, error } = await tryCatch(() => {
+        throw 'string error';
       });
 
-      expect(result.error).toBeInstanceOf(Error);
-      expect(result.error?.message).toBe("string error");
-      expect(result).not.toHaveProperty("result");
+      expect(result).toBeUndefined();
+      expect(error).toBeInstanceOf(Error);
+      expect(error?.message).toBe('string error');
     });
 
-    test("should convert rejected string into Error instance", async () => {
-      const result = await tryCatch(() => Promise.reject("rejected string"));
+    test('should convert rejected string into Error instance', async () => {
+      const { result, error } = await tryCatch(() => Promise.reject('rejected string'));
 
-      expect(result.error).toBeInstanceOf(Error);
-      expect(result.error?.message).toBe("rejected string");
-      expect(result).not.toHaveProperty("result");
+      expect(result).toBeUndefined();
+      expect(error).toBeInstanceOf(Error);
+      expect(error?.message).toBe('rejected string');
     });
 
     test.each([
-      ["number", 500],
-      ["boolean", false],
-      ["object", { code: "E_RULE" }],
-      ["null", null],
-      ["undefined", undefined],
-    ])("should preserve non-string thrown %s values", async (_label, thrownValue) => {
-      const result = await tryCatch(() => {
+      ['number', 500],
+      ['boolean', false],
+      ['object', { code: 'E_RULE' }],
+      ['null', null],
+      ['undefined', undefined],
+    ])('should preserve non-string thrown %s values', async (_label, thrownValue) => {
+      const { result, error } = await tryCatch(() => {
         throw thrownValue;
       });
 
-      expect(result).toEqual({ error: thrownValue });
-      expect(result.error).toBe(thrownValue);
-      expect(result).not.toHaveProperty("result");
+      expect(result).toBeUndefined();
+      expect(error).toBe(thrownValue);
     });
 
-    test("should not call the input function more than once when it throws", async () => {
-      const expectedError = new Error("one call");
+    test('should not call the input function more than once when it throws', async () => {
+      const expectedError = new Error('one call');
       const input = jest.fn(() => {
         throw expectedError;
       });
 
-      const result = await tryCatch(input);
+      const { result, error } = await tryCatch(input);
 
-      expect(result).toEqual({ error: expectedError });
+      expect(result).toBeUndefined();
+      expect(error).toBe(expectedError);
       expect(input).toHaveBeenCalledTimes(1);
     });
   });
@@ -169,6 +160,6 @@ describe("tryCatch tests", () => {
 class CustomError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "CustomError";
+    this.name = 'CustomError';
   }
 }

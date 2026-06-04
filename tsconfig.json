@@ -2,14 +2,11 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "./dist",
     "module": "esnext",
     "target": "esnext",
     "types": ["jest"],
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
+    "noEmit": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
 
@@ -21,7 +18,8 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "dist", ".coverage"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "*.config.ts"],
+  "exclude": ["node_modules", "dist", ".coverage", ".jest-cache"]
 }

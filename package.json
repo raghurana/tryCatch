@@ -1,17 +1,64 @@
 {
-  "name": "trycatch",
-  "version": "1.0.0",
-  "description": "A simple util to wrap async functions and handle errors type-safely.",
-  "scripts": {
-    "dev": "tsx src/cli.ts",
-    "test": "jest"
-  },
+  "name": "try-catch-util",
+  "version": "1.0.2",
+  "description": "A simple util to wrap sync/async functions and handle errors type-safely.",
+  "keywords": [
+    "try catch",
+    "typescript",
+    "async typed errors",
+    "generic result"
+  ],
   "author": "Raghu Rana",
   "license": "MIT",
+  "repository": {
+    "url": "https://github.com/raghurana/tryCatch"
+  },
   "type": "module",
+  "main": "./dist/node/index.cjs",
+  "types": "./dist/node/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/node/index.d.ts",
+      "browser": "./dist/browser/index.js",
+      "import": "./dist/node/index.js",
+      "require": "./dist/node/index.cjs",
+      "default": "./dist/neutral/index.js"
+    },
+    "./node": {
+      "types": "./dist/node/index.d.ts",
+      "import": "./dist/node/index.js",
+      "require": "./dist/node/index.cjs",
+      "default": "./dist/node/index.js"
+    },
+    "./neutral": {
+      "types": "./dist/neutral/index.d.ts",
+      "import": "./dist/neutral/index.js",
+      "default": "./dist/neutral/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser/index.d.ts",
+      "import": "./dist/browser/index.js",
+      "default": "./dist/browser/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "check": "biome check .",
+    "test": "jest",
+    "build": "tsc --build --noEmit && tsx esbuild.config.ts",
+    "prepublishOnly": "npm run build && npm test"
+  },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.16",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.9.1",
+    "esbuild": "^0.28.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "tsx": "^4.22.4",

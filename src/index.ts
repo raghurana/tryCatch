@@ -16,7 +16,7 @@ export async function tryCatch<T, E extends Error = Error>(input: () => Promise<
     const result = await input();
     return { result };
   } catch (e) {
-    const error = typeof e === "string" ? (new Error(String(e)) as E) : (e as E);
+    const error = typeof e === 'string' ? (new Error(String(e)) as E) : (e as E);
     return { error };
   }
 }

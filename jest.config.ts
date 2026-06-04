@@ -1,28 +1,28 @@
-import type { Config } from "jest";
+import type { Config } from 'jest';
 
 const config: Config = {
-  clearMocks: true,
-  collectCoverage: true,
-  collectCoverageFrom: ["src/**/*.ts"],
-  coverageDirectory: ".coverage",
-  coverageProvider: "v8",
-  coverageReporters: ["json", "text", "lcov", "clover"],
-  moduleFileExtensions: ["ts", "js", "json", "node"],
-  testEnvironment: "node",
-  testMatch: ["**/tests/**/*.test.ts"],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testMatch: ['**/*.test.ts'],
   transform: {
-    "^.+\\.ts$": [
-      "ts-jest",
+    '^.+\\.ts$': [
+      'ts-jest',
       {
         tsconfig: {
-          module: "commonjs",
-          target: "es2022",
-          verbatimModuleSyntax: false,
-          ignoreDeprecations: "6.0",
+          module: 'commonjs',
+          target: 'es2022',
+          ignoreDeprecations: '6.0',
         },
       },
     ],
   },
+  clearMocks: true,
+  cache: true,
+  cacheDirectory: '.jest-cache',
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.ts'],
+  coverageDirectory: '.coverage',
+  coverageReporters: ['json', 'text', 'lcov', 'clover'],
 };
 
 export default config;
