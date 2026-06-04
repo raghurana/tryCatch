@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { copyFileSync, rmSync } from 'node:fs';
+import { rmSync } from 'node:fs';
 import { build } from 'esbuild';
 
 rmSync('dist', { recursive: true, force: true });
@@ -18,29 +18,12 @@ await build({
   ...shared,
   platform: 'neutral',
   format: 'esm',
-  outfile: 'dist/neutral/index.js',
+  outfile: 'dist/esm/index.js',
 });
 
 await build({
   ...shared,
-  platform: 'node',
-  format: 'esm',
-  outfile: 'dist/node/index.js',
-});
-
-await build({
-  ...shared,
-  platform: 'node',
+  platform: 'neutral',
   format: 'cjs',
-  outfile: 'dist/node/index.cjs',
+  outfile: 'dist/cjs/index.cjs',
 });
-
-await build({
-  ...shared,
-  platform: 'browser',
-  format: 'esm',
-  outfile: 'dist/browser/index.js',
-});
-
-copyFileSync('dist/neutral/index.d.ts', 'dist/node/index.d.ts');
-copyFileSync('dist/neutral/index.d.ts', 'dist/browser/index.d.ts');

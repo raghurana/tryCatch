@@ -1,6 +1,6 @@
 {
   "name": "try-catch-util",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "A simple util to wrap sync/async functions and handle errors type-safely.",
   "keywords": [
     "try catch",
@@ -14,31 +14,14 @@
     "url": "https://github.com/raghurana/tryCatch"
   },
   "type": "module",
-  "main": "./dist/node/index.cjs",
-  "types": "./dist/node/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/node/index.d.ts",
-      "browser": "./dist/browser/index.js",
-      "import": "./dist/node/index.js",
-      "require": "./dist/node/index.cjs",
-      "default": "./dist/neutral/index.js"
-    },
-    "./node": {
-      "types": "./dist/node/index.d.ts",
-      "import": "./dist/node/index.js",
-      "require": "./dist/node/index.cjs",
-      "default": "./dist/node/index.js"
-    },
-    "./neutral": {
-      "types": "./dist/neutral/index.d.ts",
-      "import": "./dist/neutral/index.js",
-      "default": "./dist/neutral/index.js"
-    },
-    "./browser": {
-      "types": "./dist/browser/index.d.ts",
-      "import": "./dist/browser/index.js",
-      "default": "./dist/browser/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
     }
   },
   "files": [
