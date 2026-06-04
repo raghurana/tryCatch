@@ -28,12 +28,8 @@ const { result, error } = await tryCatch<TodosResponse>(async () => {
   return response.json() as Promise<TodosResponse>;
 });
 
-if (error) {
-  console.error(error.message);
-  return;
-}
-
-console.log(result.todos);
+if (error) console.error(error.message);
+else console.log(result.todos);
 ```
 
 `error` is typed as `Error`, so `error.message` needs no cast.
@@ -43,18 +39,8 @@ console.log(result.todos);
 ```ts
 import { tryCatch } from 'try-catch-util';
 
-type TodosResponse = {
-  todos: Array<{ id: number; todo: string; completed: boolean; userId: number }>;
-  total: number;
-  skip: number;
-  limit: number;
-};
-
 class TodosApiError extends Error {
-  constructor(
-    message: string,
-    public readonly status: number,
-  ) {
+  constructor(message: string, public readonly status: number) {
     super(message);
     this.name = 'TodosApiError';
   }
@@ -66,12 +52,8 @@ const { result, error } = await tryCatch<TodosResponse, TodosApiError>(async () 
   return response.json() as Promise<TodosResponse>;
 });
 
-if (error) {
-  console.error(error.status, error.message);
-  return;
-}
-
-console.log(result.todos.map((todo) => todo.todo));
+if (error) console.error(error.status, error.message);
+else console.log(result.todos.map((todo) => todo.todo));
 ```
 
 `error` is typed as `TodosApiError`, so `error.status` needs no cast.
@@ -93,12 +75,10 @@ import type { Result } from 'try-catch-util';
 ## API
 
 ```ts
-function tryCatch<T, E extends Error = Error>(
-  input: () => Promise<T> | T,
-): Promise<Result<T, E>>;
+function tryCatch<T, E extends Error = Error>(input: () => Promise<T> | T): Promise<Result<T, E>>;
 ```
 
-If a function throws or rejects with a string, `tryCatch` converts it into an `Error` instance. Other thrown values are preserved as-is.
+> Note: If a function throws or rejects with a string, `tryCatch` converts it into an `Error` instance. Other thrown values are preserved as-is.
 
 ## License
 
